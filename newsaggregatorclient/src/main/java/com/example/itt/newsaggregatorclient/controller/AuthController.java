@@ -4,8 +4,11 @@ import com.example.itt.newsaggregatorclient.dto.UserLoginResponseDTO;
 import com.example.itt.newsaggregatorclient.dto.UserSignUpResponseDTO;
 import com.example.itt.newsaggregatorclient.service.AdminService;
 import com.example.itt.newsaggregatorclient.service.AuthService;
+import com.example.itt.newsaggregatorclient.service.UserService;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class AuthController {
@@ -27,7 +30,9 @@ public class AuthController {
         UserLoginResponseDTO response = authService.login(username, password);
 
         if (response != null) {
-            System.out.println("Welcome to the News Application, " + response.getUsername()+"! Date: ");
+            String formattedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy"));
+            String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("h:mm a"));
+            System.out.printf("Welcome to the News Application, %s! Date: %s\nTime: %s\n", response.getUsername(), formattedDate, formattedTime);
 
             switch (response.getRole().toUpperCase()) {
                 case "ADMIN":
@@ -37,7 +42,8 @@ public class AuthController {
                     new com.example.itt.newsaggregatorclient.ui.AdminUI(adminUIController, scanner).showMenu();
                     break;
                 case "USER":
-                    new com.example.itt.newsaggregatorclient.ui.UserUI().showMenu();
+                    System.out.println(response.getUserId());
+                    new com.example.itt.newsaggregatorclient.ui.UserUI(new UserUIController(new UserService()),response,new Scanner(System.in)).showMenu();
                     break;
                 default:
                     System.out.println("Unknown role: " + response.getRole());
