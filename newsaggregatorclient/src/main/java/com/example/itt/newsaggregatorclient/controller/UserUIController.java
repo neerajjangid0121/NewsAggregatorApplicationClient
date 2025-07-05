@@ -31,8 +31,8 @@ public class UserUIController {
         userService.deleteSavedArticle(savedArticleId, userId);
     }
 
-    public void searchArticles() {
-        userService.searchArticles();
+    public void searchArticles(String query, LocalDate startDate, LocalDate endDate, String sortBy) {
+        userService.searchArticles(query, startDate, endDate, sortBy);
     }
 
     public void viewNotifications() {

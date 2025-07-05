@@ -119,8 +119,48 @@ public class UserService {
         System.out.println("🔹 Fetching latest headlines... (to be implemented)");
     }
 
-    public void searchArticles() {
-        System.out.println("🔹 Searching articles... (to be implemented)");
+    public void searchArticles(String query, LocalDate startDate, LocalDate endDate, String sortBy) {
+        StringBuilder urlBuilder = new StringBuilder(BASE_URL + "/search");
+        urlBuilder.append("?query=").append(query);
+        if (startDate != null) {
+            urlBuilder.append("&startDate=").append(startDate);
+        }
+        if (endDate != null) {
+            urlBuilder.append("&endDate=").append(endDate);
+        }
+        if (sortBy != null && !sortBy.isBlank()) {
+            urlBuilder.append("&sortBy=").append(sortBy);
+        }
+
+        try {
+            ResponseEntity<ArticleDTO[]> response = restTemplate.getForEntity(
+                    urlBuilder.toString(), ArticleDTO[].class);
+
+            ArticleDTO[] articles = response.getBody();
+
+            if (articles == null || articles.length == 0) {
+                System.out.println("\n⚠ No articles found for the search query: " + query);
+            } else {
+                System.out.println("\n🔍 S E A R C H");
+                System.out.println("Results for \"" + query + "\"");
+                for (ArticleDTO article : articles) {
+                    System.out.println("\n------------------------------");
+                    System.out.println("Article Id: " + article.getId());
+                    System.out.println(article.getTitle());
+                    System.out.println(article.getDescription());
+                    System.out.println("source: " + (article.getUrl() != null ?
+                            article.getUrl().replaceAll("https?://(www\\.)?([^/]+).*", "$2") : "Unknown"));
+                    System.out.println("URL: " + article.getUrl());
+                    if (article.getCategories() != null && !article.getCategories().isEmpty()) {
+                        System.out.println("Categories: " + String.join(", ", article.getCategories()));
+                    }
+                }
+                System.out.println("\n------------------------------");
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Failed to search articles: " + e.getMessage());
+        }
     }
 
     public void getNotifications() {

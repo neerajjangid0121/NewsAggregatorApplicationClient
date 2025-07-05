@@ -44,7 +44,7 @@ public class UserUI implements ConsoleUI {
                     showSavedArticlesMenu();
                     break;
                 case "3":
-                    //showSearchMenu();
+                    showSearchMenu();
                     break;
                 case "4":
                     //showNotificationsMenu();
@@ -163,7 +163,7 @@ public class UserUI implements ConsoleUI {
                 System.out.println("Invalid option. Please try again.");
         }
     }
-/*
+
     private void showSearchMenu() {
         System.out.print("Enter search query: ");
         String query = scanner.nextLine();
@@ -179,7 +179,7 @@ public class UserUI implements ConsoleUI {
         userUIController.searchArticles(query, startDate, endDate, sortBy);
         showSaveArticlePrompt();
     }
-
+/*
     private void showNotificationsMenu() {
         while (true) {
             System.out.println("\nNOTIFICATIONS");
