@@ -23,8 +23,12 @@ public class UserUIController {
         userService.saveArticle(articleId, userId);
     }
 
-    public void viewSavedArticles() {
-        userService.getSavedArticles();
+    public void viewSavedArticles(Long userId) {
+        userService.getSavedArticles(userId);
+    }
+
+    public void deleteSavedArticle(Long savedArticleId, Long userId) {
+        userService.deleteSavedArticle(savedArticleId, userId);
     }
 
     public void searchArticles() {

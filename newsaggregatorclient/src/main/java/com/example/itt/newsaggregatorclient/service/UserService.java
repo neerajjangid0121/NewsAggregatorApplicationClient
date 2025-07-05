@@ -2,6 +2,7 @@ package com.example.itt.newsaggregatorclient.service;
 
 import com.example.itt.newsaggregatorclient.dto.ArticleDTO;
 import com.example.itt.newsaggregatorclient.dto.SavedArticleRequestDTO;
+import com.example.itt.newsaggregatorclient.dto.SavedArticleResponseDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,12 +73,50 @@ public class UserService {
         }
     }
 
-    public void fetchLatestHeadlines() {
-        System.out.println("🔹 Fetching latest headlines... (to be implemented)");
+    public void getSavedArticles(Long userId) {
+        String url = BASE_URL + "/saved/" + userId;
+
+        try {
+            ResponseEntity<SavedArticleResponseDTO[]> response = restTemplate.getForEntity(
+                    url, SavedArticleResponseDTO[].class);
+
+            SavedArticleResponseDTO[] savedArticles = response.getBody();
+
+            if (savedArticles == null || savedArticles.length == 0) {
+                System.out.println("\n📚 No saved articles found.");
+            } else {
+                System.out.println("\n📚 Your Saved Articles:");
+                for (SavedArticleResponseDTO savedArticle : savedArticles) {
+                    System.out.println("\n------------------------------");
+                    System.out.println("💾 Saved ID   : " + savedArticle.getSavedArticleId());
+                    System.out.println("📰 Article ID : " + savedArticle.getArticleId());
+                    System.out.println("📝 Title      : " + savedArticle.getTitle());
+                    System.out.println("📄 Description: " + savedArticle.getDescription());
+                    System.out.println("📅 Published  : " + savedArticle.getPublishedAt());
+                    System.out.println("💾 Saved At   : " + savedArticle.getSavedAt());
+                    System.out.println("🔗 URL        : " + savedArticle.getUrl());
+                }
+                System.out.println("\n------------------------------");
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Failed to fetch saved articles: " + e.getMessage());
+        }
     }
 
-    public void getSavedArticles() {
-        System.out.println("🔹 Displaying saved articles... (to be implemented)");
+    public void deleteSavedArticle(Long savedArticleId, Long userId) {
+        String url = BASE_URL + "/saved/" + savedArticleId + "/user/" + userId;
+
+        try {
+            restTemplate.delete(url);
+            System.out.println("✅ Saved article deleted successfully!");
+        } catch (Exception e) {
+            System.out.println("❌ Failed to delete saved article: " + e.getMessage());
+        }
+    }
+
+    public void fetchLatestHeadlines() {
+        System.out.println("🔹 Fetching latest headlines... (to be implemented)");
     }
 
     public void searchArticles() {

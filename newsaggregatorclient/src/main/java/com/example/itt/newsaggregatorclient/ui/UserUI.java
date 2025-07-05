@@ -41,7 +41,7 @@ public class UserUI implements ConsoleUI {
                     showHeadlinesMenu();
                     break;
                 case "2":
-                    //showSavedArticlesMenu();
+                    showSavedArticlesMenu();
                     break;
                 case "3":
                     //showSearchMenu();
@@ -134,24 +134,36 @@ public class UserUI implements ConsoleUI {
             }
         }
     }
-/*
+
     private void showSavedArticlesMenu() {
-        userUIController.viewSavedArticles(user.getEmail());
-        System.out.println("\nOptions: 1. Delete Article 2. Back");
+        userUIController.viewSavedArticles(user.getUserId());
+        System.out.println("\n1. Back");
+        System.out.println("2. Logout");
+        System.out.println("3. Delete Article");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
-        if ("1".equals(choice)) {
-            System.out.print("Enter Article Id to delete: ");
-            String idStr = scanner.nextLine();
-            try {
-                Long articleId = Long.parseLong(idStr);
-                userUIController.deleteSavedArticle(articleId, user.getEmail());
-            } catch (Exception e) {
-                System.out.println("Invalid Article Id.");
-            }
+
+        switch (choice) {
+            case "1":
+                return; // Back to main menu
+            case "2":
+                System.out.println("Logging out...");
+                return;
+            case "3":
+                System.out.print("Enter Saved Article ID to delete: ");
+                String idStr = scanner.nextLine();
+                try {
+                    Long savedArticleId = Long.parseLong(idStr);
+                    userUIController.deleteSavedArticle(savedArticleId, user.getUserId());
+                } catch (Exception e) {
+                    System.out.println("Invalid Saved Article ID.");
+                }
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
         }
     }
-
+/*
     private void showSearchMenu() {
         System.out.print("Enter search query: ");
         String query = scanner.nextLine();
