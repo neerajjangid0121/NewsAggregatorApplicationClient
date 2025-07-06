@@ -35,7 +35,19 @@ public class UserUIController {
         userService.searchArticles(query, startDate, endDate, sortBy);
     }
 
-    public void viewNotifications() {
-        userService.getNotifications();
+    public void viewNotifications(Long userId) {
+        userService.getNotifications(userId);
+    }
+
+    public void configureCategoryNotification(Long userId, String category, boolean enabled) {
+        userService.configureCategoryNotification(userId, category, enabled);
+    }
+
+    public void setNotificationKeywords(Long userId, String[] keywords) {
+        userService.setNotificationKeywords(userId, keywords);
+    }
+
+    public void showCurrentNotificationSettings(Long userId) {
+        userService.showCurrentNotificationSettings(userId);
     }
 }

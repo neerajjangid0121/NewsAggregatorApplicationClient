@@ -47,7 +47,7 @@ public class UserUI implements ConsoleUI {
                     showSearchMenu();
                     break;
                 case "4":
-                    //showNotificationsMenu();
+                    showNotificationsMenu();
                     break;
                 case "5":
                     System.out.println("Logging out...");
@@ -120,18 +120,30 @@ public class UserUI implements ConsoleUI {
 
 
     private void showSaveArticlePrompt() {
-        System.out.println("\nOptions: 1. Save Article 2. Back");
+        System.out.println("\n1. Back");
+        System.out.println("2. Logout");
+        System.out.println("3. Save Article");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
-        if ("1".equals(choice)) {
-            System.out.print("Enter Article Id to save: ");
-            String idStr = scanner.nextLine();
-            try {
-                Long articleId = Long.parseLong(idStr);
-                userUIController.saveArticle(articleId, user.getUserId()); // ✅ pass userId
-            } catch (Exception e) {
-                System.out.println("Invalid Article Id.");
-            }
+
+        switch (choice) {
+            case "1":
+                return; // Back to previous menu
+            case "2":
+                System.out.println("Logging out...");
+                return;
+            case "3":
+                System.out.print("Enter Article Id to save: ");
+                String idStr = scanner.nextLine();
+                try {
+                    Long articleId = Long.parseLong(idStr);
+                    userUIController.saveArticle(articleId, user.getUserId());
+                } catch (Exception e) {
+                    System.out.println("Invalid Article Id.");
+                }
+                break;
+            default:
+                System.out.println("Invalid option. Please try again.");
         }
     }
 
@@ -173,16 +185,22 @@ public class UserUI implements ConsoleUI {
         String end = scanner.nextLine();
         System.out.print("Sort by (likes/dislikes) or leave blank: ");
         String sortBy = scanner.nextLine();
-        java.time.LocalDate startDate = null, endDate = null;
-        try { if (!start.isBlank()) startDate = java.time.LocalDate.parse(start); } catch (Exception ignored) {}
-        try { if (!end.isBlank()) endDate = java.time.LocalDate.parse(end); } catch (Exception ignored) {}
+
+        LocalDate startDate = null, endDate = null;
+        try {
+            if (!start.isBlank()) startDate = LocalDate.parse(start);
+        } catch (Exception ignored) {}
+        try {
+            if (!end.isBlank()) endDate = LocalDate.parse(end);
+        } catch (Exception ignored) {}
+
         userUIController.searchArticles(query, startDate, endDate, sortBy);
         showSaveArticlePrompt();
     }
-/*
+
     private void showNotificationsMenu() {
         while (true) {
-            System.out.println("\nNOTIFICATIONS");
+            System.out.println("\n=== NOTIFICATIONS ===");
             System.out.println("1. View Notifications");
             System.out.println("2. Configure Notifications");
             System.out.println("3. Back");
@@ -190,7 +208,7 @@ public class UserUI implements ConsoleUI {
             String choice = scanner.nextLine();
             switch (choice) {
                 case "1":
-                    userUIController.viewNotifications(user.getEmail());
+                    userUIController.viewNotifications(user.getUserId());
                     break;
                 case "2":
                     showConfigureNotificationsMenu();
@@ -204,35 +222,50 @@ public class UserUI implements ConsoleUI {
     }
 
     private void showConfigureNotificationsMenu() {
-        String[] categories = {"Business", "Entertainment", "Sports", "Technology", "Keywords"};
         while (true) {
-            System.out.println("\nCONFIGURE NOTIFICATIONS");
-            for (int i = 0; i < categories.length; i++) {
-                System.out.printf("%d. %s\n", i + 1, categories[i]);
-            }
-            System.out.println((categories.length + 1) + ". Back");
+            System.out.println("\n=== CONFIGURE NOTIFICATIONS ===");
+
+            // Show current settings
+            userUIController.showCurrentNotificationSettings(user.getUserId());
+
+            System.out.println("\n1. Business");
+            System.out.println("2. Entertainment");
+            System.out.println("3. Sports");
+            System.out.println("4. Technology");
+            System.out.println("5. Keywords");
+            System.out.println("6. Back");
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
-            int idx;
-            try { idx = Integer.parseInt(choice) - 1; } catch (Exception e) { idx = -1; }
-            if (idx >= 0 && idx < categories.length) {
-                if (categories[idx].equals("Keywords")) {
+
+            switch (choice) {
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                    String category = switch (choice) {
+                        case "1" -> "Business";
+                        case "2" -> "Entertainment";
+                        case "3" -> "Sports";
+                        case "4" -> "Technology";
+                        default -> "";
+                    };
+                    System.out.printf("Enable notifications for %s? (y/n): ", category);
+                    String yn = scanner.nextLine();
+                    boolean enabled = yn.equalsIgnoreCase("y");
+                    userUIController.configureCategoryNotification(user.getUserId(), category, enabled);
+                    break;
+                case "5":
                     System.out.print("Enter keywords (comma separated): ");
                     String keywordsStr = scanner.nextLine();
                     String[] keywords = keywordsStr.split(",");
                     for (int i = 0; i < keywords.length; i++) keywords[i] = keywords[i].trim();
-                    userUIController.setNotificationKeywords(user.getEmail(), keywords);
-                } else {
-                    System.out.printf("Enable notifications for %s? (y/n): ", categories[idx]);
-                    String yn = scanner.nextLine();
-                    boolean enabled = yn.equalsIgnoreCase("y");
-                    userUIController.configureNotification(user.getEmail(), categories[idx].toLowerCase(), enabled);
-                }
-            } else if (idx == categories.length) {
-                return;
-            } else {
-                System.out.println("Invalid option. Please try again.");
+                    userUIController.setNotificationKeywords(user.getUserId(), keywords);
+                    break;
+                case "6":
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
         }
-    }*/
+    }
 }
