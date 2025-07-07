@@ -20,4 +20,6 @@ public class ArticleDTO {
     private List<String> categories;
     private Integer reportCount;
     private String status;
+    private Integer likeCount;
+    private Integer dislikeCount;
 }

@@ -54,4 +54,12 @@ public class UserUIController {
     public void reportArticle(Long articleId, Long userId, String reason) {
         userService.reportArticle(articleId, userId, reason);
     }
+
+    public void likeArticle(Long articleId, Long userId) {
+        userService.likeArticle(articleId, userId);
+    }
+
+    public void dislikeArticle(Long articleId, Long userId) {
+        userService.dislikeArticle(articleId, userId);
+    }
 }

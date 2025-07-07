@@ -10,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -56,6 +54,8 @@ public class UserService {
                     if (article.getCategories() != null && !article.getCategories().isEmpty()) {
                         System.out.println("Categories: " + String.join(", ", article.getCategories()));
                     }
+                    System.out.println("Likes: " + (article.getLikeCount() != null ? article.getLikeCount() : 0) +
+                            " | Dislikes: " + (article.getDislikeCount() != null ? article.getDislikeCount() : 0));
                 }
                 System.out.println("\n------------------------------");
             }
@@ -167,6 +167,8 @@ public class UserService {
                     if (article.getCategories() != null && !article.getCategories().isEmpty()) {
                         System.out.println("Categories: " + String.join(", ", article.getCategories()));
                     }
+                    System.out.println("Likes: " + (article.getLikeCount() != null ? article.getLikeCount() : 0) +
+                            " | Dislikes: " + (article.getDislikeCount() != null ? article.getDislikeCount() : 0));
                 }
                 System.out.println("\n------------------------------");
             }
@@ -325,6 +327,26 @@ public class UserService {
             System.out.println("Article reported successfully.");
         } catch (HttpStatusCodeException ex) {
             printBackendError(ex);
+        }
+    }
+
+    public void likeArticle(Long articleId, Long userId) {
+        String url = BASE_URL + "/articles/" + articleId + "/like?userId=" + userId;
+        try {
+            restTemplate.postForEntity(url, null, String.class);
+            System.out.println("👍 Article liked successfully!");
+        } catch (Exception e) {
+            System.out.println("❌ Failed to like article: " + e.getMessage());
+        }
+    }
+
+    public void dislikeArticle(Long articleId, Long userId) {
+        String url = BASE_URL + "/articles/" + articleId + "/dislike?userId=" + userId;
+        try {
+            restTemplate.postForEntity(url, null, String.class);
+            System.out.println("👎 Article disliked successfully!");
+        } catch (Exception e) {
+            System.out.println("❌ Failed to dislike article: " + e.getMessage());
         }
     }
 

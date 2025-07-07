@@ -124,6 +124,8 @@ public class UserUI implements ConsoleUI {
         System.out.println("2. Logout");
         System.out.println("3. Save Article");
         System.out.println("4. Report Article");
+        System.out.println("5. Like Article");
+        System.out.println("6. Dislike Article");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
 
@@ -146,7 +148,18 @@ public class UserUI implements ConsoleUI {
                 String reason = scanner.nextLine();
                 Long articleIdForReport = Long.parseLong(id);
                 userUIController.reportArticle(articleIdForReport, user.getUserId(), reason);
-                System.out.println("Article Reported Successfully");
+                break;
+            case "5":
+                System.out.print("Enter Article Id to like: ");
+                String likeIdStr = scanner.nextLine();
+                Long likeArticleId = Long.parseLong(likeIdStr);
+                userUIController.likeArticle(likeArticleId, user.getUserId());
+                break;
+            case "6":
+                System.out.print("Enter Article Id to dislike: ");
+                String dislikeIdStr = scanner.nextLine();
+                Long dislikeArticleId = Long.parseLong(dislikeIdStr);
+                userUIController.dislikeArticle(dislikeArticleId, user.getUserId());
                 break;
             default:
                 System.out.println("Invalid option. Please try again.");
