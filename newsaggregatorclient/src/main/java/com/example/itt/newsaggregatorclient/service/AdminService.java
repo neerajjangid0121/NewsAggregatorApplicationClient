@@ -6,6 +6,9 @@ import com.example.itt.newsaggregatorclient.dto.CategoryDTO;
 import com.example.itt.newsaggregatorclient.dto.KeywordDTO;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpStatusCodeException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,8 +67,8 @@ public class AdminService {
             HttpEntity<String> request = new HttpEntity<>(String.format("\"%s\"", categoryName), headers);
             restTemplate.postForEntity(url, request, Void.class);
             return true;
-        } catch (Exception e) {
-            System.out.println("Error adding category: " + e.getMessage());
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
             return false;
         }
     }
@@ -95,12 +98,22 @@ public class AdminService {
 
     public void restrictCategory(Long categoryId, Long adminUserId, String reason) {
         String url = BASE_URL + "/categories/" + categoryId + "/restrict?adminUserId=" + adminUserId + "&reason=" + reason;
-        restTemplate.postForEntity(url, null, Void.class);
+        try {
+            restTemplate.postForEntity(url, null, Void.class);
+            System.out.println("Category restricted.");
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
+        }
     }
 
     public void unrestrictCategory(Long categoryId) {
         String url = BASE_URL + "/categories/" + categoryId + "/restrict";
-        restTemplate.delete(url);
+        try {
+            restTemplate.delete(url);
+            System.out.println("Category unrestricted.");
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
+        }
     }
 
     // Keyword restriction management
@@ -112,11 +125,33 @@ public class AdminService {
 
     public void restrictKeyword(String keyword, Long adminUserId, String reason) {
         String url = "http://localhost:8080/api/keywords/restrict?keyword=" + keyword + "&adminUserId=" + adminUserId + "&reason=" + reason;
-        restTemplate.postForEntity(url, null, Void.class);
+        try {
+            restTemplate.postForEntity(url, null, Void.class);
+            System.out.println("Keyword restricted.");
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
+        }
     }
 
     public void unrestrictKeyword(String keyword) {
         String url = "http://localhost:8080/api/keywords/restrict?keyword=" + keyword;
-        restTemplate.delete(url);
+        try {
+            restTemplate.delete(url);
+            System.out.println("Keyword unrestricted.");
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
+        }
+    }
+
+    // Utility method for error handling
+    private void printBackendError(HttpStatusCodeException ex) {
+        String responseBody = ex.getResponseBodyAsString();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> errorMap = mapper.readValue(responseBody, Map.class);
+            System.out.println("Error: " + errorMap.get("message"));
+        } catch (Exception parseEx) {
+            System.out.println("An error occurred: " + ex.getMessage());
+        }
     }
 }

@@ -40,7 +40,6 @@ public class AuthController {
                     new com.example.itt.newsaggregatorclient.ui.AdminUI(adminUIController,response, scanner).showMenu();
                     break;
                 case "USER":
-                    System.out.println(response.getUserId());
                     new com.example.itt.newsaggregatorclient.ui.UserUI(new UserUIController(new UserService()),response,new Scanner(System.in)).showMenu();
                     break;
                 default:

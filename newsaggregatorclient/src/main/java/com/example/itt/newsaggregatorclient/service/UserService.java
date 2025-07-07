@@ -10,6 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDate;
 
@@ -314,7 +319,24 @@ public class UserService {
         String url = "http://localhost:8080/api/user/articles/" + articleId + "/report"
                 + "?userId=" + userId
                 + "&reason=" + reason;
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForEntity(url, null, Void.class);
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.postForEntity(url, null, Void.class);
+            System.out.println("Article reported successfully.");
+        } catch (HttpStatusCodeException ex) {
+            printBackendError(ex);
+        }
+    }
+
+    // Utility method for error handling
+    private void printBackendError(HttpStatusCodeException ex) {
+        String responseBody = ex.getResponseBodyAsString();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> errorMap = mapper.readValue(responseBody, Map.class);
+            System.out.println("Error: " + errorMap.get("message"));
+        } catch (Exception parseEx) {
+            System.out.println("An error occurred: " + ex.getMessage());
+        }
     }
 }
