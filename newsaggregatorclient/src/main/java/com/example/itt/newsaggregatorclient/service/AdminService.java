@@ -73,14 +73,12 @@ public class AdminService {
         }
     }
 
-    // Fetch reported articles
     public List<ArticleDTO> getReportedArticles() {
         ResponseEntity<ArticleDTO[]> response = restTemplate.getForEntity(
                 USER_URL + "/articles/reported", ArticleDTO[].class);
         return Arrays.asList(response.getBody());
     }
 
-    // Hide or unhide an article
     public void toggleArticleVisibility(Long articleId, Long adminUserId, boolean hide, String reason) {
         String url = USER_URL + "/articles/" + articleId + "/visibility"
                 + "?adminUserId=" + adminUserId
@@ -89,7 +87,6 @@ public class AdminService {
         restTemplate.put(url, null);
     }
 
-    // Category restriction management
     public List<CategoryDTO> getAllCategories() {
         String url = BASE_URL + "/categories";
         ResponseEntity<CategoryDTO[]> response = restTemplate.getForEntity(url, CategoryDTO[].class);
@@ -116,7 +113,6 @@ public class AdminService {
         }
     }
 
-    // Keyword restriction management
     public List<KeywordDTO> getAllKeywords() {
         String url = "http://localhost:8080/api/keywords";
         ResponseEntity<KeywordDTO[]> response = restTemplate.getForEntity(url, KeywordDTO[].class);
@@ -143,7 +139,6 @@ public class AdminService {
         }
     }
 
-    // Utility method for error handling
     private void printBackendError(HttpStatusCodeException ex) {
         String responseBody = ex.getResponseBodyAsString();
         try {

@@ -70,7 +70,6 @@ public class AdminUIController {
         adminService.toggleArticleVisibility(articleId, adminUserId, hide, reason);
     }
 
-    // Category restriction management
     public List<CategoryDTO> getAllCategories() {
         return adminService.getAllCategories();
     }
@@ -80,7 +79,6 @@ public class AdminUIController {
     public void unrestrictCategory(Long categoryId) {
         adminService.unrestrictCategory(categoryId);
     }
-    // Keyword restriction management
     public List<KeywordDTO> getAllKeywords() {
         return adminService.getAllKeywords();
     }
