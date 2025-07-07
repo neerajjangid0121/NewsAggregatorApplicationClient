@@ -50,4 +50,8 @@ public class UserUIController {
     public void showCurrentNotificationSettings(Long userId) {
         userService.showCurrentNotificationSettings(userId);
     }
+
+    public void reportArticle(Long articleId, Long userId, String reason) {
+        userService.reportArticle(articleId, userId, reason);
+    }
 }

@@ -18,4 +18,6 @@ public class ArticleDTO {
     private String content;
     private String serverName;
     private List<String> categories;
+    private Integer reportCount;
+    private String status;
 }

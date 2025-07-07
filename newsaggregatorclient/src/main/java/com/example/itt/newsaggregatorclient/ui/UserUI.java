@@ -123,6 +123,7 @@ public class UserUI implements ConsoleUI {
         System.out.println("\n1. Back");
         System.out.println("2. Logout");
         System.out.println("3. Save Article");
+        System.out.println("4. Report Article");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine();
 
@@ -135,12 +136,17 @@ public class UserUI implements ConsoleUI {
             case "3":
                 System.out.print("Enter Article Id to save: ");
                 String idStr = scanner.nextLine();
-                try {
-                    Long articleId = Long.parseLong(idStr);
-                    userUIController.saveArticle(articleId, user.getUserId());
-                } catch (Exception e) {
-                    System.out.println("Invalid Article Id.");
-                }
+                Long articleId = Long.parseLong(idStr);
+                userUIController.saveArticle(articleId, user.getUserId());
+                break;
+            case "4":
+                System.out.print("Enter Article Id to save: ");
+                String id = scanner.nextLine();
+                System.out.print("Enter Reason (optional): ");
+                String reason = scanner.nextLine();
+                Long articleIdForReport = Long.parseLong(id);
+                userUIController.reportArticle(articleIdForReport, user.getUserId(), reason);
+                System.out.println("Article Reported Successfully");
                 break;
             default:
                 System.out.println("Invalid option. Please try again.");

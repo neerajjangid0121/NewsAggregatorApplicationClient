@@ -36,10 +36,8 @@ public class AuthController {
 
             switch (response.getRole().toUpperCase()) {
                 case "ADMIN":
-                    RestTemplate restTemplate = new RestTemplate();
-                    AdminService adminService = new AdminService(restTemplate);
-                    AdminUIController adminUIController = new AdminUIController(adminService, scanner);
-                    new com.example.itt.newsaggregatorclient.ui.AdminUI(adminUIController, scanner).showMenu();
+                    AdminUIController adminUIController = new AdminUIController(new AdminService(new RestTemplate()), scanner);
+                    new com.example.itt.newsaggregatorclient.ui.AdminUI(adminUIController,response, scanner).showMenu();
                     break;
                 case "USER":
                     System.out.println(response.getUserId());

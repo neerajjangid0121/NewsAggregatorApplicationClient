@@ -309,4 +309,12 @@ public class UserService {
             System.out.println("❌ Failed to load notification settings: " + e.getMessage());
         }
     }
+
+    public void reportArticle(Long articleId, Long userId, String reason) {
+        String url = "http://localhost:8080/api/user/articles/" + articleId + "/report"
+                + "?userId=" + userId
+                + "&reason=" + reason;
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForEntity(url, null, Void.class);
+    }
 }
