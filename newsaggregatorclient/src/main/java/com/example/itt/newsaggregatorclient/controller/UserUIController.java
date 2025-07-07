@@ -62,4 +62,8 @@ public class UserUIController {
     public void dislikeArticle(Long articleId, Long userId) {
         userService.dislikeArticle(articleId, userId);
     }
+
+    public void viewRecommendedArticles(Long userId) {
+        userService.getRecommendedArticles(userId);
+    }
 }

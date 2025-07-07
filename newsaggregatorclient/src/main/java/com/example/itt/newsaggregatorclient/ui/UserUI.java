@@ -29,9 +29,10 @@ public class UserUI implements ConsoleUI {
         while (true) {
             System.out.println("\n1. Headlines");
             System.out.println("2. Saved Articles");
-            System.out.println("3. Search");
-            System.out.println("4. Notifications");
-            System.out.println("5. Logout");
+            System.out.println("3. Recommended For You");
+            System.out.println("4. Search");
+            System.out.println("5. Notifications");
+            System.out.println("6. Logout");
             System.out.print("Enter your choice: ");
 
             String choice = scanner.nextLine();
@@ -44,12 +45,15 @@ public class UserUI implements ConsoleUI {
                     showSavedArticlesMenu();
                     break;
                 case "3":
-                    showSearchMenu();
+                    showRecommendedArticlesMenu();
                     break;
                 case "4":
-                    showNotificationsMenu();
+                    showSearchMenu();
                     break;
                 case "5":
+                    showNotificationsMenu();
+                    break;
+                case "6":
                     System.out.println("Logging out...");
                     return;
                 default:
@@ -190,6 +194,23 @@ public class UserUI implements ConsoleUI {
                     System.out.println("Invalid Saved Article ID.");
                 }
                 break;
+            default:
+                System.out.println("Invalid option. Please try again.");
+        }
+    }
+
+    private void showRecommendedArticlesMenu() {
+        userUIController.viewRecommendedArticles(user.getUserId());
+        System.out.println("\n1. Back");
+        System.out.println("2. Logout");
+        System.out.print("Enter your choice: ");
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                return;
+            case "2":
+                System.out.println("Logging out...");
+                return;
             default:
                 System.out.println("Invalid option. Please try again.");
         }

@@ -350,6 +350,36 @@ public class UserService {
         }
     }
 
+    public void getRecommendedArticles(Long userId) {
+        String url = "http://localhost:8080/api/recommendations";
+        try {
+            ResponseEntity<ArticleDTO[]> response = restTemplate.getForEntity(url, ArticleDTO[].class);
+            ArticleDTO[] articles = response.getBody();
+            if (articles == null || articles.length == 0) {
+                System.out.println("\n🤖 No recommended articles found.");
+            } else {
+                System.out.println("\n🤖 R E C O M M E N D E D   F O R   Y O U");
+                for (ArticleDTO article : articles) {
+                    System.out.println("\n------------------------------");
+                    System.out.println("Article Id: " + article.getId());
+                    System.out.println(article.getTitle());
+                    System.out.println(article.getDescription());
+                    System.out.println("source: " + (article.getUrl() != null ?
+                            article.getUrl().replaceAll("https?://(www\\.)?([^/]+).*", "$2") : "Unknown"));
+                    System.out.println("URL: " + article.getUrl());
+                    if (article.getCategories() != null && !article.getCategories().isEmpty()) {
+                        System.out.println("Categories: " + String.join(", ", article.getCategories()));
+                    }
+                    System.out.println("Likes: " + (article.getLikeCount() != null ? article.getLikeCount() : 0) +
+                            " | Dislikes: " + (article.getDislikeCount() != null ? article.getDislikeCount() : 0));
+                }
+                System.out.println("\n------------------------------");
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Failed to fetch recommended articles: " + e.getMessage());
+        }
+    }
+
     // Utility method for error handling
     private void printBackendError(HttpStatusCodeException ex) {
         String responseBody = ex.getResponseBodyAsString();
